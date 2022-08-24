@@ -1,0 +1,329 @@
+﻿<Window x:Class="Launcher.MonitorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Launcher"
+        xmlns:alg="clr-namespace:Launcher.Algorithms"
+        xmlns:wrp="clr-namespace:Launcher.Wrappers"
+        mc:Ignorable="d"
+        Title="EDKv5 alpha - Developed by Kit LAW" Height="800" Width="1200"
+        Icon="{StaticResource appIcon}">
+    <Window.Resources>
+        <MediaElement x:Key="audioCoin" Source=".\Assets\SE\coins.mp3"
+                      LoadedBehavior="Manual" UnloadedBehavior="Manual"
+                      Volume="100"/>
+        <MediaElement x:Key="audioAlert" Source=".\Assets\SE\annoy-me.mp3"
+                      LoadedBehavior="Manual" UnloadedBehavior="Manual"
+                      Volume="100"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="550"/>
+        </Grid.ColumnDefinitions>
+        <!-- Top -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="200"/>
+            </Grid.RowDefinitions>
+            <local:SchedulerView x:Name="schedule" Margin="0,0,0,0">
+                <local:SchedulerView.ContextMenu>
+                    <ContextMenu>
+                        <ContextMenu.Style>
+                            <Style TargetType="ContextMenu">
+                                <Setter Property="OverridesDefaultStyle" Value="True" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ContextMenu">
+                                            <Canvas Background="Red" IsItemsHost="true" Height="100" Width="100" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ContextMenu.Style>
+                    </ContextMenu>
+                </local:SchedulerView.ContextMenu>
+            </local:SchedulerView>
+            <!-- Down -->
+            <ListView x:Name="lvEvents" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Time" Width="80" DisplayMemberBinding="{Binding Path=Time}"/>
+                        <GridViewColumn Header="Type" Width="45" DisplayMemberBinding="{Binding Path=Type}"/>
+                        <GridViewColumn Header="Event" Width="350" DisplayMemberBinding="{Binding Path=Message}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <GridSplitter Grid.Row="1" Height="1"
+                          HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                          Background="#FF555555"/>
+        </Grid>
+        <!-- Right -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="400"/>
+            </Grid.RowDefinitions>
+            <ContentControl x:Name="gridInteract">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate DataType="{x:Type wrp:CompetitionStackCollection}">
+                        <Grid DataContext="{Binding PeekItem}">
+                            <Label Content="{Binding Event.Name}" Margin="10" Height="50" FontSize="28" VerticalAlignment="Top"/>
+                            <ListView x:Name="lvAthletList" Grid.Row="1" Margin="10,55,10,45"
+                                      ItemsSource="{Binding Results}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Lane" Width="50" DisplayMemberBinding="{Binding Lane}"/>
+                                        <GridViewColumn Header="House" Width="50">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Label.Background>
+                                                            <SolidColorBrush Color="{Binding Participant.House.Color, Converter={StaticResource colorConv}}" />
+                                                        </Label.Background>
+                                                    </Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Athlet" Width="150" DisplayMemberBinding="{Binding Participant.Name}"/>
+                                        <GridViewColumn Header="Result" Width="90">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Content="{Binding Result}"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Rank" Width="80">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Content="{Binding Rank}"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Computed Rank" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Content="{Binding ComputedRank}"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                            <Button x:Name="btnUseRank" Margin="5,5,165,5" Padding="15,0" Height="30"
+                                    Content="Use Entered Rank"
+                                    VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnUseComputedRank" Margin="5,5,10,5" Padding="15,0" Height="30"
+                                    Content="Use Computed Rank"
+                                    VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+            <GridSplitter Grid.Row="0" Height="2"
+                          HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                          Background="#FF555555"/>
+            <Grid Grid.Row="1">
+                <StackPanel Orientation="Horizontal"
+                            Margin="0,0,10,10" 
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <Button x:Name="btnPrintHsScore" Width="120" Margin="8,0,0,0" Click="btnPrintHsScore_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="../Resources/printer.png" Width="30"/>
+                            <Label Content="House Scores"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnPrintGrpRank" Width="120" Margin="8,0,0,0" Click="btnPrintGrpRank_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="../Resources/printer.png" Width="30"/>
+                            <Label Content="Group Top 8"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnPrintClsScore" Width="120" Margin="8,0,0,0" Click="btnPrintClsScore_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="../Resources/printer.png" Width="30"/>
+                            <Label Content="Class Scores"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnPrintIndvScore" Width="120" Margin="8,0,0,0" Click="btnPrintIndvScore_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="../Resources/printer.png" Width="30"/>
+                            <Label Content="Indv. Top 20"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <TabControl x:Name="tabStat" Margin="10,5,10,50">
+                    <TabItem Header="House Scores">
+                        <ListView ItemsSource="{Binding Houses}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="Rank" Width="40"  DisplayMemberBinding="{Binding Rank}"/>
+                                        <GridViewColumn Header="House" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Label Width="20" Height="20" Background="{Binding Key.Color, Converter={StaticResource brushConv}}"/>
+                                                        <Label Height="20" Padding="5,0" Content="{Binding Key.Name}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Total" Width="55" DisplayMemberBinding="{Binding Value.Total}"/>
+                                        <GridViewColumn Header="Participation" Width="80"  DisplayMemberBinding="{Binding Value.Participation}"/>
+                                        <GridViewColumn Header="Rank Score" Width="80"  DisplayMemberBinding="{Binding Value.RankScore}"/>
+                                        <GridViewColumn Header="Relay Doubled" Width="85"  DisplayMemberBinding="{Binding Value.RelayDoubled}"/>
+                                        <GridViewColumn Header="Deduction" Width="70">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Content="{Binding Value.Deduction}" Foreground="Red"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+                    <TabItem Header="Group Ranks">
+                        <ListView ItemsSource="{Binding Groups}">
+                            <ListView.Resources>
+                                <DataTemplate DataType="{x:Type alg:StudentScoreCollection}">
+                                    <ItemsControl ItemsSource="{Binding}"/>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type alg:StudentScore}">
+                                    <Label Content="{Binding DisplayValue}" />
+                                </DataTemplate>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="Group" Width="70" DisplayMemberBinding="{Binding Group, Converter={StaticResource grpConv}}"/>
+                                        <GridViewColumn Header="Gold" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding Gold}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Silver" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding Silver}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Brownz" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding Brownz}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="4th" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding th4}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="5th" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding th5}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="6th" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding th6}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="7th" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding th7}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="8th" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding th8}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+                    <TabItem Header="Class Scores">
+                        <ListView ItemsSource="{Binding Classes}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="Rank" Width="40"  DisplayMemberBinding="{Binding Rank}"/>
+                                        <GridViewColumn Header="Class" Width="50" DisplayMemberBinding="{Binding Key.Key}"/>
+                                        <GridViewColumn Header="Total" Width="55" DisplayMemberBinding="{Binding Value.Total}"/>
+                                        <GridViewColumn Header="Participation" Width="80"  DisplayMemberBinding="{Binding Value.Participation}"/>
+                                        <GridViewColumn Header="Rank Score" Width="80"  DisplayMemberBinding="{Binding Value.RankScore}"/>
+                                        <GridViewColumn Header="Relay Doubled" Width="85"  DisplayMemberBinding="{Binding Value.RelayDoubled}"/>
+                                        <GridViewColumn Header="Deduction" Width="70">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Content="{Binding Value.Deduction}" Foreground="Red"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+                    <TabItem Header="Indivisual Scores">
+                        <ListView ItemsSource="{Binding Individuals}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="Rank" Width="40"  DisplayMemberBinding="{Binding Rank}"/>
+                                        <GridViewColumn Header="Student" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Label Height="20" Padding="5,0" Content="{Binding Key.ClassName}"/>
+                                                        <Label Height="20" Padding="5,0" Content="{Binding Key.Name}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Total" Width="55" DisplayMemberBinding="{Binding Value.Total}"/>
+                                        <GridViewColumn Header="Participation" Width="80"  DisplayMemberBinding="{Binding Value.Participation}"/>
+                                        <GridViewColumn Header="Rank Score" Width="80"  DisplayMemberBinding="{Binding Value.RankScore}"/>
+                                        <GridViewColumn Header="Relay Doubled" Width="85"  DisplayMemberBinding="{Binding Value.RelayDoubled}"/>
+                                        <GridViewColumn Header="Deduction" Width="70">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Content="{Binding Value.Deduction}" Foreground="Red"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Grid>
+        <GridSplitter Grid.Column="1" Width="1"
+                      HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                      Background="#FF555555"/>
+    </Grid>
+</Window>

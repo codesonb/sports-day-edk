@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="Launcher.SchedulerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Launcher"
+             xmlns:edk="clr-namespace:EDKv5;assembly=EDKv5"
+             xmlns:em="clr-namespace:EDKv5.MonitorServices;assembly=EDKv5"
+             mc:Ignorable="d" 
+             d:DesignHeight="462" d:DesignWidth="534">
+    <UserControl.Resources>
+        <Style x:Key="moStyle" TargetType="Label">
+            <Setter Property="Background" Value="Pink"/>
+        </Style>
+        <DataTemplate DataType="{x:Type local:SimpleStringCell}">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <Label Content="{Binding Name, Mode=OneTime}"
+                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:CompetingGroupVisualAdapter}">
+            <Border x:Name="prLb" BorderThickness="1" BorderBrush="Black"
+                    MouseEnter="_occupied_cellHoverStart" MouseLeave="_occupied_cellHoverEndRecover"
+                    MouseMove="_occupied_dragStart" MouseUp="_item_MouseUp">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Label Content="{Binding CompetingGroup.Event.Name, Mode=OneTime}"
+                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                           MouseDoubleClick="_removeItem_doubleClick"
+                           ContextMenuOpening="_editor_ContextMenuOpening">
+                        <Label.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Click="_removeItem_menuClick" DataContext="{Binding}" Header="Remove">
+                                    <MenuItem.Icon>
+                                        <Image Source="..\Resources\trash.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Label.ContextMenu>
+                    </Label>
+                    <TextBlock Text="{Binding CompetingGroup.ID, Mode=OneTime}" Margin="0,1,3,0"
+                           HorizontalAlignment="Right" VerticalAlignment="Top"
+                           Foreground="Blue" FontSize="8"/>
+                    <!--HorizontalContentAlignment="Left" VerticalContentAlignment="Top"-->
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <!-- Hover (edit mode) || Passed (monitor mode) -->
+                <DataTrigger Binding="{Binding State}" Value="{x:Static em:EventCompletionState.Hover}">
+                    <Setter TargetName="prLb" Property="Background" Value="#fddfe0"/>
+                </DataTrigger>
+                <!-- Entering -->
+                <DataTrigger Binding="{Binding State}" Value="{x:Static em:EventCompletionState.Marking}">
+                    <Setter TargetName="prLb" Property="Background" Value="#99d9ea"/>
+                </DataTrigger>
+                <!-- Mismatch Rank -->
+                <DataTrigger Binding="{Binding State}" Value="{x:Static em:EventCompletionState.WaitRank}">
+                    <Setter TargetName="prLb" Property="Background" Value="#d4d4d4"/>
+                </DataTrigger>
+                <!-- Partial Completed -->
+                <DataTrigger Binding="{Binding State}" Value="{x:Static em:EventCompletionState.Partial}">
+                    <Setter TargetName="prLb" Property="Background" Value="#fff871"/>
+                </DataTrigger>
+                <!-- Pending Print -->
+                <DataTrigger Binding="{Binding State}" Value="{x:Static em:EventCompletionState.Full}">
+                    <Setter TargetName="prLb" Property="Background" Value="#e3def3"/>
+                </DataTrigger>
+                <!-- Fully Completed -->
+                <DataTrigger Binding="{Binding State}" Value="{x:Static em:EventCompletionState.Printed}">
+                    <Setter TargetName="prLb" Property="Background" Value="#b9f279"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ScrollViewer>
+        <Border BorderBrush="Black" BorderThickness="1"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ItemsControl x:Name="displayContainer">
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Grid.Row" Value="{Binding Row, Mode=OneTime}"/>
+                        <Setter Property="Grid.Column" Value="{Binding Column, Mode=OneTime}"/>
+                        <Setter Property="Grid.ColumnSpan" Value="{Binding Span, Mode=OneTime}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid x:Name="mainGrid"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Border>
+    </ScrollViewer>
+</UserControl>

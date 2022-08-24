@@ -1,0 +1,33 @@
+﻿100m
+200m
+400m
+800m
+1500m
+100m Hurdle
+110m Hurdle
+4x100m Relay
+4x400m Relay
+High Jump
+Pole Vault
+Long Jump
+Triple Jump
+Short Put
+Discus
+Javelin
+Butterfly 50m
+Backstroke 50m
+Breaststroke 50m
+Freestyle 50m
+Medley 50m
+Butterfly 100m
+Backstroke 100m
+Breaststroke 100m
+Freestyle 100m
+Medley 100m
+Butterfly 200m
+Backstroke 200m
+Breaststroke 200m
+Freestyle 200m
+Medley 200m
+4 Styles 4x100m Relay
+4 Styles 4x200m Relay

@@ -1,0 +1,104 @@
+﻿<Application x:Class="Launcher.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Launcher"
+             xmlns:edk="clr-namespace:EDKv5;assembly=EDKv5"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <!-- Other -->
+        <PathGeometry x:Key="path">
+            <PathFigure StartPoint="0,-25">
+                <ArcSegment Point="0,-25" Size="55,25" />
+                <ArcSegment Point="0,25" Size="55,25" />
+                <ArcSegment Point="0,-25" Size="55,25" />
+            </PathFigure>
+        </PathGeometry>
+        <!-- Styles -->
+        <Style x:Key="titleText" TargetType="Label">
+            <Style.Setters>
+                <Setter Property="FontSize" Value="36"/>
+                <Setter Property="FontFamily" Value="Segoe Print"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="FontStyle" Value="Italic"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="btnBaseStyle" TargetType="Button">
+            <Style.Setters>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="btnStyle" TargetType="Button" BasedOn="{StaticResource btnBaseStyle}">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="FontFamily" Value="Consolas" />
+                <Setter Property="Background" Value="{DynamicResource btnBgImg}" />
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="Yellow" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <!-- end Style -->
+        <!-- Images -->
+        <ImageSource x:Key="appIcon">Resources\icon.png</ImageSource>
+        <ImageBrush x:Key="btnBgImg" ImageSource="Resources\button1.png"/>
+        <ImageSource x:Key="imgTrash">Resources\trash.png</ImageSource>
+
+        <ResourceDictionary x:Key="imgIcons">
+            <ImageSource x:Key="0">Resources\0_track100.png</ImageSource>
+            <ImageSource x:Key="1">Resources\0_track200.png</ImageSource>
+            <ImageSource x:Key="2">Resources\0_track400.png</ImageSource>
+            <ImageSource x:Key="3">Resources\0_track800.png</ImageSource>
+            <ImageSource x:Key="4">Resources\0_track1500.png</ImageSource>
+            <ImageSource x:Key="5">Resources\1_hurdle.png</ImageSource>
+            <ImageSource x:Key="6">Resources\1_hurdle.png</ImageSource>
+            <ImageSource x:Key="7">Resources\1_track_relay4x100.png</ImageSource>
+            <ImageSource x:Key="8">Resources\1_track_relay4x400.png</ImageSource>
+            <ImageSource x:Key="9">Resources\2_0_highjump.png</ImageSource>
+            <ImageSource x:Key="10">Resources\2_1_polevault.png</ImageSource>
+            <ImageSource x:Key="11">Resources\2_2_longjump.png</ImageSource>
+            <ImageSource x:Key="12">Resources\2_3_triplejump.png</ImageSource>
+            <ImageSource x:Key="13">Resources\3_0_shortput.png</ImageSource>
+            <ImageSource x:Key="14">Resources\3_1_discus.png</ImageSource>
+            <ImageSource x:Key="15">Resources\3_2_javelin.png</ImageSource>
+        </ResourceDictionary>
+        <ImageSource x:Key="imgSwim">Resources\swim.png</ImageSource>
+        <ImageSource x:Key="imgTrack">Resources\track.png</ImageSource>
+        <ImageSource x:Key="imgField">Resources\field.png</ImageSource>
+        <ImageSource x:Key="imgRelay">Resources\track_relay.png</ImageSource>
+
+        <ImageSource x:Key="imgLane1">Resources\red_dot_1.png</ImageSource>
+        <ImageSource x:Key="imgLane2">Resources\red_dot_2.png</ImageSource>
+        <ImageSource x:Key="imgLane3">Resources\red_dot_3.png</ImageSource>
+        <ImageSource x:Key="imgLane4">Resources\red_dot_4.png</ImageSource>
+        <ImageSource x:Key="imgLane5">Resources\red_dot_5.png</ImageSource>
+        <ImageSource x:Key="imgLane6">Resources\red_dot_6.png</ImageSource>
+        <ImageSource x:Key="imgLane7">Resources\red_dot_7.png</ImageSource>
+        <ImageSource x:Key="imgLane8">Resources\red_dot_8.png</ImageSource>
+        <!-- end Images -->
+        <!-- Converters -->
+        <local:NullConverter x:Key="nullConv"/>
+        <local:ColorBrushConverter x:Key="brushConv"/>
+        <local:ColorConverter x:Key="colorConv"/>
+        <local:IconConverter x:Key="iconConv"/>
+        <local:GroupConverter x:Key="grpConv"/>
+        <local:LaneConverter x:Key="laneConv"/>
+        <local:RankConverter x:Key="rnkConv"/>
+        <local:ObservableListAdpaterConverter x:Key="obvConv"/>
+        <local:CompetingGroupHierarchyConverter x:Key="compGrpConv"/>
+        <!-- Strings -->
+        <sys:String x:Key="strApplicationName">EDKv5 alpha - Developed by Kit Law</sys:String>
+    </Application.Resources>
+</Application>

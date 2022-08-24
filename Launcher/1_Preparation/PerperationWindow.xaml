@@ -1,0 +1,111 @@
+﻿<Window x:Class="Launcher.PerperationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Launcher"
+        mc:Ignorable="d" Width="800" Height="600" MinWidth="800" MinHeight="600"
+        Title="EDKv5 - alpha" BorderBrush="Black" BorderThickness="3"
+        Foreground="White" Icon="{StaticResource appIcon}"
+        WindowStyle="None" AllowsTransparency="True" WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResizeWithGrip"
+        Closing="Window_Closing">
+    <Window.Effect>
+        <DropShadowEffect />
+    </Window.Effect>
+    <!--<Window.Background>
+        <ImageBrush ImageSource="..\Resources\formUI.png"/>
+    </Window.Background>-->
+    <Window.Resources>
+        <local:CurrentPage x:Key="curPage" x:Name="curPage">
+            <local:CurrentPage.UI>
+                <Image Source="..\Resources\intro.png" HorizontalAlignment="Left" VerticalAlignment="Top" Height="378" Width="509"/>
+            </local:CurrentPage.UI>
+        </local:CurrentPage>
+        <Style x:Key="btnTransparent" TargetType="Button" BasedOn="{StaticResource btnBaseStyle}">
+            <Style.Setters>
+                <Setter Property="Background" Value="Transparent" />
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid MouseDown="_dragMoveThis" Background="Black">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="43" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="34" />
+                <ColumnDefinition Width="31" />
+            </Grid.ColumnDefinitions>
+            <Image Grid.Row="1" Source="..\Resources\icon.png" />
+            <TextBlock Text="EDKv5 alpha - Developed by Kitlaw"
+                           FontFamily="Segoe Print" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Left" VerticalAlignment="Stretch"/>
+            <Button x:Name="btnMinimize" Content="" Grid.Column="2" Grid.Row="1"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="25" Height="21"
+                        Click="btnMinimize_Click" Style="{StaticResource btnBaseStyle}">
+                <Button.Background>
+                    <ImageBrush ImageSource="..\Resources\btn_minimize.jpg" />
+                </Button.Background>
+            </Button>
+            <Button x:Name="btnClose" Content="" Grid.Column="3" Grid.Row="1"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="25" Height="21"
+                        Click="btnClose_Click" Style="{StaticResource btnBaseStyle}">
+                <Button.Background>
+                    <ImageBrush ImageSource="..\Resources\btn_close.jpg" />
+                </Button.Background>
+            </Button>
+        </Grid>
+        <!-- -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="86" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <StackPanel.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
+                        <GradientStop Color="#FFCD0000" Offset="0"/>
+                        <GradientStop Color="Red" Offset="1"/>
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+                <Button x:Name="btnStuInfo" Click="btnSwitchPage_Click" Margin="3" Height="62"
+                            Style="{StaticResource btnTransparent}">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="12">
+                        <Image Source="..\Resources\menu_btn_stu_info.png" />
+                    </Border>
+                </Button>
+                <Button x:Name="btnHsInfo" Click="btnSwitchPage_Click" Margin="3" Height="62"
+                            Style="{StaticResource btnTransparent}">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="12">
+                        <Image Source="..\Resources\menu_btn_house_set.png" />
+                    </Border>
+                </Button>
+                <Button x:Name="btnEvInfo" Click="btnSwitchPage_Click" Margin="3" Height="62"
+                            Style="{StaticResource btnTransparent}">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="12">
+                        <Image Source="..\Resources\menu_btn_events_set.png" />
+                    </Border>
+                </Button>
+                <Button x:Name="btnScheduler" Click="btnSwitchPage_Click" Margin="3" Height="62"
+                            Style="{StaticResource btnTransparent}">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="12">
+                        <Image Source="..\Resources\menu_btn_schedule.png" />
+                    </Border>
+                </Button>
+                <Button x:Name="btnHolder" Click="btnSwitchPage_Click" Margin="3" Height="62"
+                            Style="{StaticResource btnTransparent}">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="12">
+                        <Image Source="..\Resources\menu_btn_holder.png" />
+                    </Border>
+                </Button>
+            </StackPanel>
+            <Border x:Name="main" Grid.Column="1" BorderThickness="0">
+                <Border.DataContext>
+                    <Binding Source="{StaticResource curPage}"/>
+                </Border.DataContext>
+                <ContentPresenter Content="{Binding UI, Mode=Default}" />
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
